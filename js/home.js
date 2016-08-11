@@ -21,10 +21,10 @@ var loadResource = function(resource, ele) {
   xhr.open('GET', resource.replace("http:", "https:"), true);
   xhr.responseType = 'blob';
   document.getElementsByClassName('lightbox')[0].getElementsByClassName('loading')[0].style.display = 'block';
-  document.getElementsByClassName('lightbox')[0].getElementsByTagName('img')[0].style.display = 'none';
+  document.getElementsByClassName('lightbox')[0].getElementsByClassName('lightbox-image')[0].style.display = 'none';
   xhr.onload = function(e) {
     document.getElementsByClassName('lightbox')[0].getElementsByClassName('loading')[0].style.display = 'none';
-  document.getElementsByClassName('lightbox')[0].getElementsByTagName('img')[0].style.display = 'block';
+  document.getElementsByClassName('lightbox')[0].getElementsByClassName('lightbox-image')[0].style.display = 'block';
   }
   xhr.onreadystatechange = function() {
     console.log(xhr);
@@ -35,7 +35,7 @@ var loadResource = function(resource, ele) {
         var imgUrl = URL.createObjectURL(blob);
         var a = document.createElement("img")
         a.src = imgUrl;
-        ele.getElementsByTagName('img')[0].src = imgUrl;
+        ele.getElementsByClassName('lightbox-image')[0].src = imgUrl;
       }
   }
   xhr.send();
@@ -102,20 +102,19 @@ var Gallery = function() {
   
   this.imageTemplate = function(width, height, index) {
     var isLandscapeImage = width > height;
-    var imageBox = document.createElement('div');
-    imageBox.className = isLandscapeImage ? "horizontal" : "vertical";
-    imageBox.className = "image-box " + imageBox.className;
     
-    var imageTitle = document.createElement('div');
-    imageTitle.className = "image-title limit-characters";
+    let className = isLandscapeImage ? "horizontal" : "vertical";
+    className = "image-box " + className;
+    
+    var imageBox = addNode('div', [{name: 'className', value: className}]);
+    
+    var imageTitle = addNode('div', [{name: 'className', value: 'image-title limit-characters'}]);
     
     imageBox.appendChild(imageTitle);
     
-    var imageContainer = document.createElement('div');
-    imageContainer.className = "image-container";
+    var imageContainer = addNode('div', [{name: 'className', value: 'image-container'}]);
     
-    var verticallyCenter = document.createElement('div');
-    verticallyCenter.className = "center-vertical";
+    var verticallyCenter = addNode('div', [{name: 'className', value: 'center-vertical'}]);
     
     var imageElement = document.createElement('img');
     imageElement.className = "center-horizontal";
@@ -168,43 +167,38 @@ var addOverlay = function(e) {
   lightboxElem.className = "lightbox " + lightboxElem.className;
   lightboxElem.style.display = "none";
   
-  var contentElem = document.createElement('div');
-  contentElem.className = "content";
+  var contentElem = addNode('div', [{name: 'className', value: 'content'}]);
   lightboxElem.appendChild(contentElem);
   
-  var prevImgElem = document.createElement('div');
-  prevImgElem.className = "prev-image center-vertical";
+  var prevImgElem = addNode('div', [{name: 'className', value: 'prev-image center-vertical'}]);
   prevImgElem.onclick = viewPreviousImage;
-  prevImgElem.appendChild(document.createTextNode("<"));
+  //prevImgElem.appendChild(document.createTextNode("<"));
+  prevImgElem.appendChild(addNode('img', [{name: 'src', value: './icons/left.png'}, {name: 'alt', value: '<'}, {name: 'className', value: 'icon'}]));
   
-  var nextImgElem = document.createElement('div');
-  nextImgElem.className = "next-image center-vertical";
+  var nextImgElem = addNode('div', [{name: 'className', value: 'next-image center-vertical'}]);
   nextImgElem.onclick = viewNextImage;
-  nextImgElem.appendChild(document.createTextNode(">"));
+  //nextImgElem.appendChild(document.createTextNode(">"));
+  nextImgElem.appendChild(addNode('img', [{name: 'src', value: './icons/right.png'}, {name: 'alt', value: '>'}, {name: 'className', value: 'icon'}]));
   
-  var imgContainerElem = document.createElement('div');
-  imgContainerElem.className = "image-container";
+  var imgContainerElem = addNode('div', [{name: 'className', value: 'image-container'}]);
   
   contentElem.appendChild(prevImgElem);
   contentElem.appendChild(imgContainerElem);
   contentElem.appendChild(nextImgElem);
   
-  var centerVElem = document.createElement('div');
-  centerVElem.className = "center-vertical";
+  var centerVElem = addNode('div', [{name: 'className', value: 'center-vertical'}]);
   imgContainerElem.appendChild(centerVElem);
   
-  var loadingItem = document.createElement('div');
-  loadingItem.className = "loading";
+  var loadingItem = addNode('div', [{name: 'className', value: 'loading'}]);
   loadingItem.appendChild(document.createTextNode(" "));
   centerVElem.appendChild(loadingItem);
   
-  var closeLightboxItem = document.createElement('div');
-  closeLightboxItem.className = "close-lightbox";
-  closeLightboxItem.appendChild(document.createTextNode("x"));
+  var closeLightboxItem = addNode('div', [{name: 'className', value: 'close-lightbox'}]);
+  //closeLightboxItem.appendChild(document.createTextNode("x"));
+  closeLightboxItem.appendChild(addNode('img', [{name: 'src', value: './icons/close.png'}, {name: 'alt', value: 'x'}, {name: 'className', value: 'icon'}]));
   centerVElem.appendChild(closeLightboxItem);
   
-  var imgElem = document.createElement('img');
-  imgElem.className = "center-horizontal";
+  var imgElem = addNode('img', [{name: 'className', value: 'center-horizontal lightbox-image'}]);
   imgElem.src = "";
   centerVElem.appendChild(imgElem);
   

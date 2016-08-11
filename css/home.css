@@ -91,6 +91,11 @@ body {
   }
 }
 
+.icon {
+  width: 100%;
+  height: auto;
+}
+
 .image-box {
   padding: 0.5em;
   height: 20em;
